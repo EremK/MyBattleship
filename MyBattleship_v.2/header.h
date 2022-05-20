@@ -9,3 +9,11 @@
 using namespace sf;
 
 const int ships[10] = { 4, 3, 3, 2, 2, 2, 1, 1, 1, 1 };
+
+enum GameStages
+{
+	PAUSE = -1,
+	START,
+	GAMEPLAY,
+	FINISH
+};

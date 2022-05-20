@@ -13,7 +13,7 @@ int main()
 	int urShotsBoard[BS][BS];
 
 	int w = 32;
-	int gameStage = 0;
+	int gameStage = START;
 	int shipsTotal = 0;
 	int moveNumber = 1;
 	bool gameMode = 0; // 0 - человек -> компьютер, 1 - компьютер -> компьютер
@@ -49,7 +49,7 @@ int main()
 
 		app.draw(s_background);
 
-		if (gameStage == 0)
+		if (gameStage == START)
 		{
 			// Кнопка 1 Переход на следующий этап игры
 			s.setTextureRect(IntRect(11 * w, 0, w, w));
@@ -71,7 +71,7 @@ int main()
 			//app.draw(s);
 			// // // // //
 		}
-		else if (gameStage == 1 || gameStage == -1)
+		else if (gameStage == GAMEPLAY || gameStage == PAUSE)
 		{
 			// Кнопка - новая игра
 			s.setTextureRect(IntRect(3 * w, 0, w, w));
@@ -102,10 +102,10 @@ int main()
 				s.setTextureRect(IntRect(myGameGraph[i][j] * w, 0, w, w));
 				// Устанавливаем его в заданную позицию...
 				s.setPosition(j * w, i * w);
-				s.move(30, 70); // Визуально двигаем поле, чтобы избежа соприкосновения с границами окна
+				s.move(30, 70); // Визуально двигаем поле, чтобы избежать соприкосновения с границами окна
 				app.draw(s); // ... и отрисовываем
 			}
-			if (gameStage == 1 || gameStage == -1)
+			if (gameStage == GAMEPLAY || gameStage == PAUSE)
 			{
 				for (int j = 0; j < 10; j++)
 				{
@@ -137,7 +137,7 @@ int main()
 
 		// Логика ботов
 
-		if (gameStage == 1)
+		if (gameStage == GAMEPLAY)
 		{
 			if (moveNumber % 2 == 0) // Ход компьютера
 			{
@@ -148,7 +148,7 @@ int main()
 					playersMove(urShotsBoard, myGameGraph, y, x);
 					moveNumber++;
 				}
-				else if (gameStage == 1)
+				else if (gameStage == GAMEPLAY)
 				{
 
 				}
@@ -160,11 +160,11 @@ int main()
 
 		// Проверка победы!
 
-		if (winCheck(myGameGraph) && gameStage == 1)
+		if (winCheck(myGameGraph) && gameStage == GAMEPLAY)
 		{
 			std::cout << "Player 1 Wins!\n";
 		}
-		else if (winCheck(urGameGraph) && gameStage == 1)
+		else if (winCheck(urGameGraph) && gameStage == GAMEPLAY)
 		{
 			std::cout << "Player 2 Wins!\n";
 		}
@@ -178,21 +178,21 @@ int main()
 
 			if (e.type == Event::MouseButtonPressed)
 			{
-				if (gameStage == 1 || gameStage == -1) // Пауза
+				if (gameStage == GAMEPLAY || gameStage == PAUSE) // Пауза
 				{
 					if (e.key.code == Mouse::Left && x == 22 && y == 0)
 					{
-						if (gameStage == 1)
+						if (gameStage == GAMEPLAY)
 						{
-							gameStage = -1;
+							gameStage = PAUSE;
 						}
-						else if (gameStage == -1)
+						else if (gameStage == PAUSE)
 						{
-							gameStage = 1;
+							gameStage = GAMEPLAY;
 						}
 					}
 				}
-				if (gameStage == 0)
+				if (gameStage == START)
 				{
 					if (e.key.code == Mouse::Left && x == 1 && y == 0 && shipsTotal == 9)
 					{
@@ -220,13 +220,13 @@ int main()
 					//	break;
 					//}
 				}
-				else if (gameStage == 1)
+				else if (gameStage == GAMEPLAY)
 				{
 					if (e.key.code == Mouse::Left && x == 21 && y == 0)
 					{
 						hideEnemyBoard = !hideEnemyBoard;
 					}
-					if (gameMode == 0) // Человек -> Компьютер
+					if (gameMode == START) // Человек -> Компьютер
 					{
 						if (e.key.code == Mouse::Left
 							&& x >= 1 && x <= 10
@@ -242,17 +242,17 @@ int main()
 							moveNumber++;
 						}
 					}
-					if (gameMode == 1) // Компьютер -> Компьютер
-					{
+					//if (gameMode == 1) // Компьютер -> Компьютер
+					//{
 
-					}
+					//}
 				}
 				//else if (gameStage == 1) // 3-й этап игры - победа.
 				//{
 
 				//}
 
-				if (gameStage == 1)
+				if (gameStage == GAMEPLAY)
 				{
 					if (e.key.code == Mouse::Left && x == 23 && y == 0)
 					{

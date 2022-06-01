@@ -15,3 +15,25 @@ bool winCheck(int gameGraph[][BS])
 	}
 	return true;
 }
+
+int** createMatrix(int rows, int columns)
+{
+	int** matrix = new int* [rows];
+
+	for (int i = 0; i < rows; i++)
+	{
+		matrix[i] = new int[columns];
+	}
+
+	return matrix;
+}
+
+void removeMatrix(int** matrix, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		delete[] matrix[i];
+	}
+
+	delete[] matrix;
+}

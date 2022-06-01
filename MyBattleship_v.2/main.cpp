@@ -19,10 +19,16 @@ int main()
 	bool gameMode = 0; // 0 - человек -> компьютер, 1 - компьютер -> компьютер
 	bool compIntelligence = 0; // 0 - случайный выстрел, 1 - умная игра
 	bool hideEnemyBoard = 1;
+	bool hit = false;
+	int t_x, t_y;
+	char dir = '-';
+	int** shipCoords = nullptr;
+	bool shipConfirmed = true;
+	bool shipIsVertical = true;
 
 	// Загрузка текстуры и создание спрайта
 	Texture t, texture_background;
-	t.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\2.jpg");
+	t.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\BS.jpg");
 	//texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\Background.png"); // Фон <-
 	Sprite s(t), s_background(texture_background);
 
@@ -41,7 +47,7 @@ int main()
 		int x = pos.x / w;
 		int y = pos.y / w;
 
-		std::cout << x << "\t" << y << std::endl; // temp !
+		//std::cout << x << "\t" << y << std::endl; // temp !
 
 		Event e;
 
@@ -49,7 +55,7 @@ int main()
 
 		app.draw(s_background);
 
-		if (gameStage == START)
+		if (gameStage == START || gameStage == MANUAL)
 		{
 			// Кнопка 1 Переход на следующий этап игры
 			s.setTextureRect(IntRect(11 * w, 0, w, w));
@@ -65,10 +71,10 @@ int main()
 			// // // // //
 
 			// Кнопка добавить корабль для собственной росстановки 
-			//s.setTextureRect(IntRect(4 * w, 0, w, w));
-			//s.setPosition(0, 0);
-			//s.move(30, 410);
-			//app.draw(s);
+			s.setTextureRect(IntRect(4 * w, 0, w, w));
+			s.setPosition(0, 0);
+			s.move(30, 410);
+			app.draw(s);
 			// // // // //
 		}
 		else if (gameStage == GAMEPLAY || gameStage == PAUSE)
@@ -148,17 +154,35 @@ int main()
 					playersMove(urShotsBoard, myGameGraph, y, x);
 					moveNumber++;
 				}
-				else if (gameStage == GAMEPLAY)
+				else if (compIntelligence == 1)
 				{
+					if (hit == false)
+					{
+						x = rand() % 9;
+						y = rand() % 9;
+						t_x = x;
+						t_y = y;
+						playersMove(urShotsBoard, myGameGraph, y, x);
 
+						if (urShotsBoard[y][x] == 5)
+						{
+							hit = true;
+						}
+
+						moveNumber++;
+					}
+					else
+					{
+						smartBotMove(urShotsBoard, myGameGraph, t_y, t_x, hit, dir);
+						moveNumber++;
+					}
 				}
 			}
 		}
 
-
 		//
 
-		// Проверка победы!
+		// Проверка победы! // Not done yet
 
 		if (winCheck(myGameGraph) && gameStage == GAMEPLAY)
 		{
@@ -168,8 +192,6 @@ int main()
 		{
 			std::cout << "Player 2 Wins!\n";
 		}
-
-		//
 
 		while (app.pollEvent(e))
 		{
@@ -192,33 +214,51 @@ int main()
 						}
 					}
 				}
-				if (gameStage == START)
+				if (gameStage == START || gameStage == MANUAL)
 				{
 					if (e.key.code == Mouse::Left && x == 1 && y == 0 && shipsTotal == 9)
 					{
-						++gameStage;
+						gameStage = GAMEPLAY;
 						break;
 					}
 					else if (e.key.code == Mouse::Left && x == 2 && y == 0)
 					{
+
 						changeShipsPlacement(myGameGraph);
 						shipsTotal = 9;
 						break;
 					}
-					//else if (e.key.code == Mouse::Left && x == 1 && y == 13) // Temp, not done yet
-					//{
-					//	//makeCleanBoard(myGameGraph); //
-					//	//makeCleanBoard(myGameLogic); //
-					//	//shipsTotal = 0; // Нужно чтобы было девять.
-					//	bool shipConfirm = true;
-					//	int** shipCoords = createMatrix(ships[shipsTotal], 2);
-					//	if (shipsTotal < 10) searchRandPlace(myGameLogic, myGameGraph, shipsTotal, shipCoords);
+					else if (e.key.code == Mouse::Left && x == 1 && y == 13) // Temp, not done yet // Mannaul ship placement
+					{
+						//makeCleanBoard(myGameGraph); //
+						//makeCleanBoard(myGameLogic); //
+						//shipsTotal = 0; // Нужно чтобы было девять.
 
-					//	int dx = 0;
+						if (shipsTotal == 9) // Temp, работает не по задумке
+						{
+							makeCleanBoard(myGameGraph);
+							shipsTotal = 0;
+						}
+						else
+						{
+							if (shipConfirmed == true)
+							{
+								removeMatrix(shipCoords, shipsTotal);
+								shipCoords = createMatrix(ships[shipsTotal], 2);
+								mannualShipPlacement(myGameGraph, shipsTotal, shipCoords);
 
-					//	removeMatrix(shipCoords, ships[shipsTotal - 1]);
-					//	break;
-					//}
+								gameStage = MANUAL;
+								shipConfirmed = false;
+
+								if (shipsTotal == 9)
+								{
+									gameStage == GAMEPLAY;
+									break;
+								}
+							}
+						}
+						break; // ?
+					}
 				}
 				else if (gameStage == GAMEPLAY)
 				{
@@ -226,7 +266,7 @@ int main()
 					{
 						hideEnemyBoard = !hideEnemyBoard;
 					}
-					if (gameMode == START) // Человек -> Компьютер
+					if (gameMode == 0) // Человек -> Компьютер
 					{
 						if (e.key.code == Mouse::Left
 							&& x >= 1 && x <= 10
@@ -267,6 +307,65 @@ int main()
 				}
 			}
 
+			int dx = 0, dy = 0;
+			if (e.type == Event::KeyPressed && gameStage == MANUAL && shipConfirmed == false /* && shipCoords != nullptr */)
+			{
+				if (e.key.code == Keyboard::Left)
+				{
+					std::cout << "L\n";
+					dy = -1;
+				}
+				else if (e.key.code == Keyboard::Right)
+				{
+					std::cout << "R\n";
+					dy = 1;
+				}
+				else if (e.key.code == Keyboard::Up)
+				{
+					std::cout << "U\n";
+					dx = -1;
+				}
+				else if (e.key.code == Keyboard::Down)
+				{
+					std::cout << "D\n";
+					dx = 1;
+				}
+				//else if (e.key.code == Keyboard::Space) // Поворот корабля на 90 градусов и обратно при повторном нажатии
+				//{
+
+				//}
+				else if (e.key.code == Keyboard::Enter)
+				{
+					std::cout << "Enter\n";
+					shipsTotal++;
+					shipConfirmed = true;
+					break;
+				}
+
+				std::cout << "Turn 122:\n";
+
+				if (mannualMoveCheck(myGameGraph, shipsTotal, shipCoords, dx, dy, shipIsVertical))
+				{
+					for (int x = 0; x < ships[shipsTotal]; x++)
+					{
+						myGameGraph[shipCoords[x][0]][shipCoords[x][1]] = 10;
+					}
+
+					for (int z = 0; z < ships[shipsTotal]; z++)
+					{
+						shipCoords[z][0] += dx;
+						shipCoords[z][1] += dy;
+					}
+
+					for (int x = 0; x < ships[shipsTotal]; x++)
+					{
+						myGameGraph[shipCoords[x][0]][shipCoords[x][1]] = 9;
+					}
+				}
+
+				dx = 0, dy = 0;
+			}
+
 			Sleep(100);
 		}
 
@@ -275,5 +374,8 @@ int main()
 		Sleep(100);
 	}
 
+	//removeMatrix(shipCoords);
+
 	return 0;
 }
+

@@ -28,7 +28,7 @@ int main()
 
 	// Загрузка текстуры и создание спрайта
 	Texture t, texture_background;
-	t.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\BS.jpg");
+	t.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\BS_4.jpg");
 	//texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\Background.png"); // Фон <-
 	Sprite s(t), s_background(texture_background);
 
@@ -70,10 +70,24 @@ int main()
 			app.draw(s);
 			// // // // //
 
-			// Кнопка добавить корабль для собственной росстановки 
+			// Кнопка 3 добавить корабль для собственной росстановки 
 			s.setTextureRect(IntRect(4 * w, 0, w, w));
 			s.setPosition(0, 0);
 			s.move(30, 410);
+			app.draw(s);
+			// // // // //
+
+			// Кнопка 4 Изменить сложность бота-противника 
+			s.setTextureRect(IntRect(7 * w, 0, w, w));
+			s.setPosition(0, 0);
+			s.move(286, 0);
+			app.draw(s);
+			// // // // //
+
+			// Кнопка 5 включить режим бот против бота
+			s.setTextureRect(IntRect(8 * w, 0, w, w));
+			s.setPosition(0, 0);
+			s.move(318, 0);
 			app.draw(s);
 			// // // // //
 		}
@@ -92,7 +106,7 @@ int main()
 			app.draw(s);
 			// // // // //
 			// Кнопка - Показать/скрыть вражеские поля
-			s.setTextureRect(IntRect(1 * w, 0, w, w));
+			s.setTextureRect(IntRect(6 * w, 0, w, w));
 			s.setPosition(0, 0);
 			s.move(670, 0);
 			app.draw(s);
@@ -228,36 +242,37 @@ int main()
 						shipsTotal = 9;
 						break;
 					}
-					else if (e.key.code == Mouse::Left && x == 1 && y == 13) // Temp, not done yet // Mannaul ship placement
+					else if (e.key.code == Mouse::Left && x == 1 && y == 13)
 					{
-						//makeCleanBoard(myGameGraph); //
-						//makeCleanBoard(myGameLogic); //
-						//shipsTotal = 0; // Нужно чтобы было девять.
-
-						if (shipsTotal == 9) // Temp, работает не по задумке
+						if (shipsTotal == 9)
 						{
 							makeCleanBoard(myGameGraph);
 							shipsTotal = 0;
 						}
-						else
+
+						std::cout << "Hmmmm\n";
+
+						if (shipConfirmed == true)
 						{
-							if (shipConfirmed == true)
+							//removeMatrix(shipCoords, shipsTotal);
+							std::cout << "Err1\n"; //
+							shipCoords = createMatrix(ships[shipsTotal], 2);
+							std::cout << "Err2\n"; // 
+							mannualShipPlacement(myGameGraph, shipsTotal, shipCoords);
+							std::cout << "Err3\n"; //
+							gameStage = MANUAL;
+							shipConfirmed = false;
+
+							if (shipsTotal == 9)
 							{
-								removeMatrix(shipCoords, shipsTotal);
-								shipCoords = createMatrix(ships[shipsTotal], 2);
-								mannualShipPlacement(myGameGraph, shipsTotal, shipCoords);
-
-								gameStage = MANUAL;
-								shipConfirmed = false;
-
-								if (shipsTotal == 9)
-								{
-									gameStage == GAMEPLAY;
-									break;
-								}
+								gameStage = GAMEPLAY;
+								break;
 							}
 						}
-						break; // ?
+
+						std::cout << "Rrrrrrr\n";
+
+						break; 
 					}
 				}
 				else if (gameStage == GAMEPLAY)
@@ -330,15 +345,20 @@ int main()
 					std::cout << "D\n";
 					dx = 1;
 				}
-				//else if (e.key.code == Keyboard::Space) // Поворот корабля на 90 градусов и обратно при повторном нажатии
-				//{
-
-				//}
+				else if (e.key.code == Keyboard::Space) // Поворот корабля на 90 градусов и обратно при повторном нажатии
+				{
+					std::cout << "Space\n";
+					shipIsVertical = turnShip(myGameGraph, shipsTotal, shipCoords, shipIsVertical);
+				}
 				else if (e.key.code == Keyboard::Enter)
 				{
-					std::cout << "Enter\n";
-					shipsTotal++;
+					std::cout << "Enter1.0\n";
+					++shipsTotal;
 					shipConfirmed = true;
+					shipIsVertical = true;
+					std::cout << "Enter2.0\n";
+					if (shipsTotal == 9)
+						gameStage = GAMEPLAY;
 					break;
 				}
 

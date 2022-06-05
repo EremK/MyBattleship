@@ -214,7 +214,7 @@ void changeShipsPlacement(int arrGraph[][BS])
 	}
 }
 
-bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int** shipCoords)
+bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int** shipCoords) // not completed
 {
 	std::cout << "1\n";
 
@@ -502,13 +502,15 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 		{1, 1}
 	};
 
+	std::cout << "Entered manualMoveCheck() function!\n";
+
 	if (dy == -1)
 	{
 		for (int y = 0; y < ships[counter]; y++)
 		{
 			int t_x = shipCoords[y][0] + dx;
 			int t_y = shipCoords[y][1] + dy;
-			if (t_x > 9 || t_x < 0 || t_y > 9 || t_y < 0) 
+			if (t_x > 9 || t_x < 0 || t_y > 9 || t_y < 0)
 				return false;
 			std::cout << t_x << "\t" << t_y << std::endl;
 
@@ -646,33 +648,79 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 	{
 		return false;
 	}
+}
 
-	//for (int y = 0; y < ships[counter]; y++)
-	//{
-	//	int t_x = shipCoords[y][0] + dx;
-	//	int t_y = shipCoords[y][1] + dy;
-	//	std::cout << t_x << "\t" << t_y << std::endl;
- //
-	//	for (int U = 0; U < 8; U++)
-	//	{
-	//		for (int O = 0; O < 8; O++)
-	//		{
-	//			if (arrGraph[t_y + coords[U][0]][t_x + coords[O][1]] == 9)
-	//			{
-	//				return false;
-	//			}
-	//		}
-	//	}
-	//	//if (arrGraph[shipCoords[y][0]][shipCoords[y][1]] != 10 || shipCoords[y][1] + y >= 10)
-	//	//{
-	//	//	return false;
-	//	//}
-	//}
-	//return true;
+bool turnShip(int arrGraph[][BS], int counter, int** shipCoords, bool shipIsVertical) 
+{
+	bool turnIsNotCorrect = false;
 
-	//for (int i = 0; i < ships[counter]; i++)
-	//{
+	if (shipIsVertical)
+	{
+		for (int i = 1; i < ships[counter]; i++)
+		{
+			if (arrGraph[shipCoords[0][0]][shipCoords[0][1] + i] != 10 || shipCoords[0][1] + i > 9)
+			{
+				turnIsNotCorrect = true;
+			}
 
-	//	myGameGraph[shipCoords[x][0]][shipCoords[x][1]] = 10;
-	//}
+			if (i == ships[counter] - 1) 
+			{
+				for (int O = 0; O < 8; O++)
+				{
+					if (arrGraph[shipCoords[0][0] + coords[O][0]][shipCoords[0][1] + i + coords[O][1]] == 9) 
+					{
+						if (O == 5) continue;
+						turnIsNotCorrect = true;
+					}
+				}
+			}
+		}
+
+		if (!turnIsNotCorrect)
+		{
+			for (int i = 1; i < ships[counter]; i++)
+			{
+				arrGraph[shipCoords[i][0]][shipCoords[i][1]] = 10;
+				arrGraph[shipCoords[0][0]][shipCoords[0][1] + i] = 9;
+				shipCoords[i][0] = shipCoords[0][0];
+				shipCoords[i][1] = shipCoords[0][1] + i;
+			}
+			return false;
+		}
+	}
+	else
+	{
+		for (int i = 1; i < ships[counter]; i++)
+		{
+			if (arrGraph[shipCoords[0][0] + i][shipCoords[0][1]] != 10 || shipCoords[0][0] + i > 9)
+			{
+				turnIsNotCorrect = true;
+			}
+
+			if (i == ships[counter] - 1)
+			{
+				for (int O = 0; O < 8; O++)
+				{
+					if (arrGraph[shipCoords[0][0] + i + coords[O][0]][shipCoords[0][1] + coords[O][1]] == 9) // <-|
+					{
+						if (O == 7) continue;
+						turnIsNotCorrect = true;
+					}
+				}
+			}
+		}
+
+		if (!turnIsNotCorrect)
+		{
+			for (int i = 1; i < ships[counter]; i++)
+			{
+				arrGraph[shipCoords[i][0]][shipCoords[i][1]] = 10;
+				arrGraph[shipCoords[0][0] + i][shipCoords[0][1]] = 9;
+				shipCoords[i][0] = shipCoords[0][0] + i;
+				shipCoords[i][1] = shipCoords[0][1];
+			}
+			return true;
+		}
+	}
+	return shipIsVertical;
 }

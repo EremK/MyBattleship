@@ -21,3 +21,5 @@ bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int*
 void mannualShipPlacement(int arrGraph[][BS], int counter, int** shipCoords);
 
 bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx, int dy, bool shipIsVertical);
+
+bool turnShip(int arrGraph[][BS], int counter, int** shipCoords, bool shipIsVertical);

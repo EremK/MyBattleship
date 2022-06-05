@@ -1,5 +1,6 @@
 #include "header.h"
 #include "functions.h"
+#pragma warning(disable: 4996)
 
 int main()
 {
@@ -25,12 +26,22 @@ int main()
 	int** shipCoords = nullptr;
 	bool shipConfirmed = true;
 	bool shipIsVertical = true;
+	bool textPause = false;
 
 	// Загрузка текстуры и создание спрайта
 	Texture t, texture_background;
 	t.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\BS_4.jpg");
-	//texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\Background.png"); // Фон <-
+	texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\Background.png"); // Фон <-
 	Sprite s(t), s_background(texture_background);
+
+	Font font;//шрифт 
+	font.loadFromFile("robosapien.ttf");//передаем нашему шрифту файл шрифта
+	Text text("", font, 17);//создаем объект текст. закидываем в объект текст строку, шрифт, размер шрифта(в пикселях);//сам объект текст (не строка)
+	Text helloTxt("", font, 31);
+	text.setColor(Color::Blue);//покрасили текст в красный. если убрать эту строку, то по умолчанию он белый
+	helloTxt.setColor(Color::Blue);
+	text.setStyle(sf::Text::Bold);//жирный текст. по умолчанию он "худой":))
+	helloTxt.setStyle(sf::Text::Bold);
 
 	// P1 
 	makeCleanBoard(myGameGraph);
@@ -40,6 +51,66 @@ int main()
 	makeCleanBoard(urGameGraph);
 	makeCleanBoard(urShotsBoard);
 	changeShipsPlacement(urGameGraph);
+
+	int currentBackground = 0;
+	bool backgroundWasChanged = false;
+
+	while (app.isOpen())
+	{
+		Event e;
+		bool goToTheNextStep = false;
+		app.draw(s_background);
+
+		helloTxt.setString(helloMenu());//задает строку тексту
+		helloTxt.setPosition(135, 45);
+		app.draw(helloTxt);//рисую этот текст
+
+		while (app.pollEvent(e))
+		{
+			if (e.type == Event::KeyPressed)
+			{
+				if (e.key.code == Keyboard::Left)
+				{
+					currentBackground--;
+					if (currentBackground < 0)
+						currentBackground = 1;
+					backgroundWasChanged = true;
+					break;
+				}
+				else if (e.key.code == Keyboard::Right)
+				{
+					currentBackground++;
+					if (currentBackground > 1)
+						currentBackground = 0;
+					backgroundWasChanged = true;
+					break;
+				}
+				else if (e.key.code == Keyboard::Enter)
+				{
+					goToTheNextStep = true;
+					break;
+				}
+			}
+		}
+
+		if (currentBackground == 0 && backgroundWasChanged)
+		{
+			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\Background.png");
+			Sprite s_background(texture_background);
+		}
+		else if (currentBackground == 1 && backgroundWasChanged)
+		{
+			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\bg2.jpg");
+			Sprite s_background(texture_background);
+		}
+
+		app.display();
+
+		if (goToTheNextStep)
+			break;
+
+		Sleep(250);
+	}
 
 	while (app.isOpen())
 	{
@@ -242,6 +313,46 @@ int main()
 						shipsTotal = 9;
 						break;
 					}
+					else if (e.key.code == Mouse::Left && x == 9 && y == 0) // Меняем сложность бота-противника
+					{
+						if (compIntelligence == 0)
+						{
+							text.setString("Enemy bot is smart");//задает строку тексту
+							text.setPosition(100, 7);//задаем позицию текста, центр камеры
+							app.draw(text);//рисую этот текст
+							textPause = true;
+							compIntelligence = 1;
+						}
+						else if (compIntelligence == 1)
+						{
+							text.setString(" Enemy bot is dumb");//задает строку тексту
+							text.setPosition(100, 7);//задаем позицию текста, центр камеры
+							app.draw(text);//рисую этот текст
+							textPause = true;
+							compIntelligence = 0;
+						}
+
+
+					}
+					else if (e.key.code == Mouse::Left && x == 10 && y == 0) // Ставим режим игры бот против бота или наоборот
+					{
+						if (gameMode == 0)
+						{
+							text.setString("\t  Gamemode:\n\t  Bot VS Bot");//задает строку тексту
+							text.setPosition(100, 0);//задаем позицию текста, центр камеры
+							app.draw(text);//рисую этот текст
+							textPause = true;
+							gameMode = 1;
+						}
+						else if (gameMode == 1)
+						{
+							text.setString("\t   Gamemode:\n\t Player VS Bot");//задает строку тексту
+							text.setPosition(100, 0);//задаем позицию текста, центр камеры
+							app.draw(text);//рисую этот текст
+							textPause = true;
+							gameMode = 0;
+						}
+					}
 					else if (e.key.code == Mouse::Left && x == 1 && y == 13)
 					{
 						if (shipsTotal == 9)
@@ -390,6 +501,12 @@ int main()
 		}
 
 		app.display();
+
+		if (textPause)
+		{
+			Sleep(2000);
+			textPause = false;
+		}
 
 		Sleep(100);
 	}

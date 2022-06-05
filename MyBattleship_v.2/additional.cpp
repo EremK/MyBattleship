@@ -37,3 +37,12 @@ void removeMatrix(int** matrix, int n)
 
 	delete[] matrix;
 }
+
+std::string helloMenu()
+{
+	std::string str;
+
+	str = "\t\t    Greetings, dear player!\n  You are now in my game \"Battleship\" \n\n\t\t\t\t   Key bindings:\n\nIn the current menu:\n-------------------------------------------------\n| Rt -> go to the next background \n| Lt -> go to the previous background \n| Enter -> confirm background \n| selection and go to game\n-------------------------------------------------\n\nWhile manually moving ships:\n-------------------------------------------------\n| Up -> move the ship up one cell\n| Dn -> move ship down one cell\n| Rt -> move ship to the right one cell \n| Lt -> move ship to the left one cell \n| Space -> turn the ship \n| Enter -> confirm ship location\n-------------------------------------------------";
+
+	return str;
+}

@@ -31,7 +31,7 @@ int main()
 	// «агрузка текстуры и создание спрайта
 	Texture t, texture_background;
 	t.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\BS_4.jpg");
-	texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\Background.png"); // ‘он <-
+	texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\bg5.jpg"); // ‘он <-
 	Sprite s(t), s_background(texture_background);
 
 	Font font;//шрифт 
@@ -39,7 +39,7 @@ int main()
 	Text text("", font, 17);//создаем объект текст. закидываем в объект текст строку, шрифт, размер шрифта(в пиксел€х);//сам объект текст (не строка)
 	Text helloTxt("", font, 31);
 	text.setColor(Color::Blue);//покрасили текст в красный. если убрать эту строку, то по умолчанию он белый
-	helloTxt.setColor(Color::Blue);
+	helloTxt.setColor(Color::Cyan);
 	text.setStyle(sf::Text::Bold);//жирный текст. по умолчанию он "худой":))
 	helloTxt.setStyle(sf::Text::Bold);
 
@@ -67,20 +67,23 @@ int main()
 
 		while (app.pollEvent(e))
 		{
+			if (e.type == Event::Closed)
+				app.close();
+
 			if (e.type == Event::KeyPressed)
 			{
 				if (e.key.code == Keyboard::Left)
 				{
 					currentBackground--;
 					if (currentBackground < 0)
-						currentBackground = 1;
+						currentBackground = 5;
 					backgroundWasChanged = true;
 					break;
 				}
 				else if (e.key.code == Keyboard::Right)
 				{
 					currentBackground++;
-					if (currentBackground > 1)
+					if (currentBackground > 5)
 						currentBackground = 0;
 					backgroundWasChanged = true;
 					break;
@@ -95,12 +98,32 @@ int main()
 
 		if (currentBackground == 0 && backgroundWasChanged)
 		{
-			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\Background.png");
+			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\bg3.jpg");
 			Sprite s_background(texture_background);
 		}
 		else if (currentBackground == 1 && backgroundWasChanged)
 		{
 			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\bg2.jpg");
+			Sprite s_background(texture_background);
+		}
+		else if (currentBackground == 2 && backgroundWasChanged)
+		{
+			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\bg1.png");
+			Sprite s_background(texture_background);
+		}
+		else if (currentBackground == 3 && backgroundWasChanged)
+		{
+			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\bg4.jpg");
+			Sprite s_background(texture_background);
+		}
+		else if (currentBackground == 4 && backgroundWasChanged)
+		{
+			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\bg5.jpg");
+			Sprite s_background(texture_background);
+		}
+		else if (currentBackground == 5 && backgroundWasChanged)
+		{
+			texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\Ўј√\\ќсновы C++\\Ёкзамен\\MyBattleship_v.2\\Media files\\bg6.jpg");
 			Sprite s_background(texture_background);
 		}
 

@@ -27,3 +27,7 @@ bool turnShip(int arrGraph[][BS], int counter, int** shipCoords, bool shipIsVert
 std::string helloMenu();
 
 void randomShot(int urShotBoard[][BS], int myGameGraph[][BS], int& x, int& y);
+
+void high_score_save(int score, int player);
+
+int high_score_init(int player);

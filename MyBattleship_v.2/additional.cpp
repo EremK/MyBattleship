@@ -46,3 +46,90 @@ std::string helloMenu()
 
 	return str;
 }
+
+int StringToNumber(std::string str)
+{
+	int result = 0, i = 0;
+
+	while (true)
+	{
+		if (str[i] == '\0')
+		{
+			result /= 10;
+			return result;
+		}
+		else if (str[i] < 48 || str[i] > 57)
+		{
+			i++;
+			continue;
+		}
+
+		result += str[i] - 48;
+		result *= 10;
+		i++;
+	}
+}
+
+
+void high_score_save(int score, int player)
+{
+	switch (player)
+	{
+	case 1:
+	{
+		std::ofstream out("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\high_score1.txt");
+
+		if (out.is_open())
+		{
+			out << score;
+		}
+
+		out.close();
+		break;
+	}
+	case 2:
+	{
+		std::ofstream out("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\high_score2.txt");
+
+		if (out.is_open())
+		{
+			out << score;
+		}
+
+		out.close();
+		break;
+	}
+	}
+}
+
+int high_score_init(int player)
+{
+	std::string line;
+
+	switch (player)
+	{
+	case 1:
+	{
+		std::ifstream in("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\high_score1.txt");
+
+		if (in.is_open())
+		{
+			getline(in, line);
+			in.close();
+		}
+		return StringToNumber(line);
+	}
+	case 2:
+	{
+		std::ifstream in("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\high_score2.txt");
+
+		if (in.is_open())
+		{
+			getline(in, line);
+			in.close();
+		}
+		return StringToNumber(line);
+	}
+	}
+}
+

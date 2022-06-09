@@ -431,52 +431,6 @@ void mannualShipPlacement(int arrGraph[][BS], int counter, int** shipCoords)
 	} // t
 
 	std::cout << "Next\n";
-
-	//int dx = 0, dy = 0;
-
-	//while (app.pollEvent(e))
-	//{
-	//	if (e.type == Event::Closed)
-	//		app.close();
-
-	//	if (e.type == Event::KeyPressed)
-	//	{
-	//		if (e.key.code == Keyboard::Left)
-	//		{
-	//			std::cout << "L\n";
-	//			dx = -1;
-	//		}
-	//		else if (e.key.code == Keyboard::Right)
-	//		{
-	//			std::cout << "R\n";
-	//			dx = 1;
-	//		}
-	//		else if (e.key.code == Keyboard::Up)
-	//		{
-	//			std::cout << "U\n";
-	//			dy = -1;
-	//		}
-	//		else if (e.key.code == Keyboard::Down)
-	//		{
-	//			std::cout << "D\n";
-	//			dy = 1;
-	//		}
-	//		else if (e.key.code == Keyboard::Enter)
-	//		{
-	//			std::cout << "Enter\n";
-	//			break;
-	//		}
-
-	//		for (int z = 0; z < ships[counter]; z++)
-	//		{
-	//			shipCoords[z][0] += dx;
-	//			shipCoords[z][1] += dy;
-	//			dx = 0, dy = 0;
-	//		}
-	//	}
-	//	Sleep(100);
-	//	std::cout << "Infinitive!\n";
-	//}
 }
 
 bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx, int dy, bool shipIsVertical)

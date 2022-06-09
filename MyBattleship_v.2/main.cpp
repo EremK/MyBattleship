@@ -28,6 +28,7 @@ int main()
 	bool shipConfirmed = true;
 	bool shipIsVertical = true;
 	bool textPause = false;
+	int scoreP1 = high_score_init(1), scoreP2 = high_score_init(2);
 
 	// Загрузка текстуры и создание спрайта
 	Texture t, texture_background;
@@ -135,7 +136,7 @@ int main()
 			break;
 
 		Sleep(250);
-	} 
+	}
 
 	while (app.isOpen())
 	{
@@ -207,6 +208,19 @@ int main()
 			s.move(670, 0);
 			app.draw(s);
 			// // // // //
+			helloTxt.setString("P1 score:");
+			helloTxt.setPosition(10, 785);
+			app.draw(helloTxt);
+			helloTxt.setString(std::to_string(scoreP1));
+			helloTxt.setPosition(145, 786);
+			app.draw(helloTxt);
+			// // // // //
+			helloTxt.setString("P2 score:");
+			helloTxt.setPosition(635, 785);
+			app.draw(helloTxt);
+			helloTxt.setString(std::to_string(scoreP2));
+			helloTxt.setPosition(780, 786);
+			app.draw(helloTxt);
 		}
 
 		// Отрисвока полей
@@ -257,11 +271,15 @@ int main()
 		if (winCheck(urGameGraph) && gameStage == GAMEPLAY)
 		{
 			std::cout << "Player 1 Wins!\n";
+			++scoreP1;
+			high_score_save(scoreP1, 1);
 			gameStage = FINISH;
 		}
 		else if (winCheck(myGameGraph) && gameStage == GAMEPLAY)
 		{
 			std::cout << "Player 2 Wins!\n";
+			++scoreP2;
+			high_score_save(scoreP2, 2);
 			gameStage = FINISH;
 		}
 		//- - - - - - - -
@@ -375,60 +393,28 @@ int main()
 
 						std::cout << "Rrrrrrr\n";
 
-						break; 
+						break;
 					}
 				}
-				else if (gameStage == GAMEPLAY)
+				else if (gameStage == GAMEPLAY && gameMode == 0)
 				{
-					//if (e.key.code == Mouse::Left && x == 21 && y == 0)
-					//{
-					//	hideEnemyBoard = !hideEnemyBoard;
-					//}
-					if (gameMode == 0) // Человек -> Компьютер
+					// Человек -> Компьютер
+
+					if (e.key.code == Mouse::Left
+						&& x >= 1 && x <= 10
+						&& y >= 14 && y <= 23
+						&& myShotsBoard[y - 14][x - 1] != 5
+						&& myShotsBoard[y - 14][x - 1] != 0
+						&& moveNumber % 2 != 0)
 					{
-						if (e.key.code == Mouse::Left
-							&& x >= 1 && x <= 10
-							&& y >= 14 && y <= 23
-							&& myShotsBoard[y - 14][x - 1] != 5
-							&& myShotsBoard[y - 14][x - 1] != 0
-							&& moveNumber % 2 != 0)
-						{
-							std::cout << "FF?\n";
-							x -= 1;
-							y -= 14;
-							playersMove(myShotsBoard, urGameGraph, y, x);
-							moveNumber++;
-						}
+						std::cout << "FF?\n";
+						x -= 1;
+						y -= 14;
+						playersMove(myShotsBoard, urGameGraph, y, x);
+						moveNumber++;
 					}
-					//else if (gameMode == 1) // Компьютер -> Компьютер
-					//{
-					//	randomShot(myShotsBoard, urGameGraph, x, y);
-					//	moveNumber++;
-					//	//if (hit == false)
-					//	//{
-					//	//	randomShot(myShotsBoard, urGameGraph, x, y);
-					//	//	t_x = x;
-					//	//	t_y = y;
-					//	//	playersMove(myShotsBoard, urGameGraph, y, x);
 
-					//	//	if (myShotsBoard[y][x] == 5)
-					//	//	{
-					//	//		hit = true;
-					//	//	}
-
-					//	//	moveNumber++;
-					//	//}
-					//	//else
-					//	//{
-					//	//	smartBotMove(myShotsBoard, urGameGraph, opositeDirCheck, t_y, t_x, hit, dir);
-					//	//	moveNumber++;
-					//	//}
-					//}
 				}
-				//else if (gameStage == ) // 3-й этап игры - победа.
-				//{
-
-				//}
 
 				if (gameStage == GAMEPLAY || gameStage == PAUSE || gameStage == FINISH)
 				{

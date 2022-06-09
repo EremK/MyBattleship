@@ -10,7 +10,7 @@ void playersMove(int myShotBoard[][BS], int urGameGraph[][BS], int x, int y);
 
 bool winCheck(int gameGraph[][BS]);
 
-void smartBotMove(int urShotBoard[][BS], int myGameGraph[][BS], int& x, int& y, bool& hit, char& dir);
+void smartBotMove(int urShotBoard[][BS], int myGameGraph[][BS], bool& opositeDirCheck, int& x, int& y, bool& hit, char& dir);
 
 int** createMatrix(int rows, int columns);
 
@@ -25,3 +25,5 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 bool turnShip(int arrGraph[][BS], int counter, int** shipCoords, bool shipIsVertical);
 
 std::string helloMenu();
+
+void randomShot(int urShotBoard[][BS], int myGameGraph[][BS], int& x, int& y);

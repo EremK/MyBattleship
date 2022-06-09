@@ -20,9 +20,10 @@ int main()
 	bool gameMode = 0; // 0 - человек -> компьютер, 1 - компьютер -> компьютер
 	bool compIntelligence = 0; // 0 - случайный выстрел, 1 - умная игра
 	bool hideEnemyBoard = 1;
-	bool hit = false;
-	int t_x, t_y;
-	char dir = '-';
+	bool hit = false, hit0 = false;
+	int t_x, t_y, t_x0, t_y0;
+	bool opositeDirCheck = false, opositeDirCheck0 = false;
+	char dir = '-', dir0 = '-';
 	int** shipCoords = nullptr;
 	bool shipConfirmed = true;
 	bool shipIsVertical = true;
@@ -65,6 +66,7 @@ int main()
 		helloTxt.setPosition(135, 45);
 		app.draw(helloTxt);//рисую этот текст
 
+		// Начальный экран, выбор фона
 		while (app.pollEvent(e))
 		{
 			if (e.type == Event::Closed)
@@ -133,7 +135,7 @@ int main()
 			break;
 
 		Sleep(250);
-	}
+	} 
 
 	while (app.isOpen())
 	{
@@ -141,7 +143,7 @@ int main()
 		int x = pos.x / w;
 		int y = pos.y / w;
 
-		//std::cout << x << "\t" << y << std::endl; // temp !
+		std::cout << x << "\t" << y << std::endl; // temp !
 
 		Event e;
 
@@ -185,7 +187,7 @@ int main()
 			app.draw(s);
 			// // // // //
 		}
-		else if (gameStage == GAMEPLAY || gameStage == PAUSE)
+		else if (gameStage == GAMEPLAY || gameStage == PAUSE || gameStage == FINISH)
 		{
 			// Кнопка - новая игра
 			s.setTextureRect(IntRect(3 * w, 0, w, w));
@@ -219,7 +221,7 @@ int main()
 				s.move(30, 70); // Визуально двигаем поле, чтобы избежать соприкосновения с границами окна
 				app.draw(s); // ... и отрисовываем
 			}
-			if (gameStage == GAMEPLAY || gameStage == PAUSE)
+			if (gameStage == GAMEPLAY || gameStage == PAUSE || gameStage == FINISH)
 			{
 				for (int j = 0; j < 10; j++)
 				{
@@ -249,57 +251,20 @@ int main()
 			}
 		}
 
-		// Логика ботов
 
-		if (gameStage == GAMEPLAY)
-		{
-			if (moveNumber % 2 == 0) // Ход компьютера
-			{
-				if (compIntelligence == 0) // Ум компьютера
-				{
-					x = rand() % 9;
-					y = rand() % 9;
-					playersMove(urShotsBoard, myGameGraph, y, x);
-					moveNumber++;
-				}
-				else if (compIntelligence == 1)
-				{
-					if (hit == false)
-					{
-						x = rand() % 9;
-						y = rand() % 9;
-						t_x = x;
-						t_y = y;
-						playersMove(urShotsBoard, myGameGraph, y, x);
-
-						if (urShotsBoard[y][x] == 5)
-						{
-							hit = true;
-						}
-
-						moveNumber++;
-					}
-					else
-					{
-						smartBotMove(urShotsBoard, myGameGraph, t_y, t_x, hit, dir);
-						moveNumber++;
-					}
-				}
-			}
-		}
-
-		//
-
+		//- - - - - - - -
 		// Проверка победы! // Not done yet
-
-		if (winCheck(myGameGraph) && gameStage == GAMEPLAY)
+		if (winCheck(urGameGraph) && gameStage == GAMEPLAY)
 		{
 			std::cout << "Player 1 Wins!\n";
+			gameStage = FINISH;
 		}
-		else if (winCheck(urGameGraph) && gameStage == GAMEPLAY)
+		else if (winCheck(myGameGraph) && gameStage == GAMEPLAY)
 		{
 			std::cout << "Player 2 Wins!\n";
+			gameStage = FINISH;
 		}
+		//- - - - - - - -
 
 		while (app.pollEvent(e))
 		{
@@ -308,7 +273,7 @@ int main()
 
 			if (e.type == Event::MouseButtonPressed)
 			{
-				if (gameStage == GAMEPLAY || gameStage == PAUSE) // Пауза
+				if (gameStage == GAMEPLAY || gameStage == PAUSE || gameStage == FINISH) // Пауза
 				{
 					if (e.key.code == Mouse::Left && x == 22 && y == 0)
 					{
@@ -320,6 +285,10 @@ int main()
 						{
 							gameStage = GAMEPLAY;
 						}
+					}
+					else if (e.key.code == Mouse::Left && x == 21 && y == 0)
+					{
+						hideEnemyBoard = !hideEnemyBoard;
 					}
 				}
 				if (gameStage == START || gameStage == MANUAL)
@@ -341,7 +310,7 @@ int main()
 						if (compIntelligence == 0)
 						{
 							text.setString("Enemy bot is smart");//задает строку тексту
-							text.setPosition(100, 7);//задаем позицию текста, центр камеры
+							text.setPosition(100, 7);
 							app.draw(text);//рисую этот текст
 							textPause = true;
 							compIntelligence = 1;
@@ -349,7 +318,7 @@ int main()
 						else if (compIntelligence == 1)
 						{
 							text.setString(" Enemy bot is dumb");//задает строку тексту
-							text.setPosition(100, 7);//задаем позицию текста, центр камеры
+							text.setPosition(100, 7);
 							app.draw(text);//рисую этот текст
 							textPause = true;
 							compIntelligence = 0;
@@ -362,7 +331,7 @@ int main()
 						if (gameMode == 0)
 						{
 							text.setString("\t  Gamemode:\n\t  Bot VS Bot");//задает строку тексту
-							text.setPosition(100, 0);//задаем позицию текста, центр камеры
+							text.setPosition(100, 0);
 							app.draw(text);//рисую этот текст
 							textPause = true;
 							gameMode = 1;
@@ -370,7 +339,7 @@ int main()
 						else if (gameMode == 1)
 						{
 							text.setString("\t   Gamemode:\n\t Player VS Bot");//задает строку тексту
-							text.setPosition(100, 0);//задаем позицию текста, центр камеры
+							text.setPosition(100, 0);//задаем позицию текста,
 							app.draw(text);//рисую этот текст
 							textPause = true;
 							gameMode = 0;
@@ -411,10 +380,10 @@ int main()
 				}
 				else if (gameStage == GAMEPLAY)
 				{
-					if (e.key.code == Mouse::Left && x == 21 && y == 0)
-					{
-						hideEnemyBoard = !hideEnemyBoard;
-					}
+					//if (e.key.code == Mouse::Left && x == 21 && y == 0)
+					//{
+					//	hideEnemyBoard = !hideEnemyBoard;
+					//}
 					if (gameMode == 0) // Человек -> Компьютер
 					{
 						if (e.key.code == Mouse::Left
@@ -431,17 +400,37 @@ int main()
 							moveNumber++;
 						}
 					}
-					//if (gameMode == 1) // Компьютер -> Компьютер
+					//else if (gameMode == 1) // Компьютер -> Компьютер
 					//{
+					//	randomShot(myShotsBoard, urGameGraph, x, y);
+					//	moveNumber++;
+					//	//if (hit == false)
+					//	//{
+					//	//	randomShot(myShotsBoard, urGameGraph, x, y);
+					//	//	t_x = x;
+					//	//	t_y = y;
+					//	//	playersMove(myShotsBoard, urGameGraph, y, x);
 
+					//	//	if (myShotsBoard[y][x] == 5)
+					//	//	{
+					//	//		hit = true;
+					//	//	}
+
+					//	//	moveNumber++;
+					//	//}
+					//	//else
+					//	//{
+					//	//	smartBotMove(myShotsBoard, urGameGraph, opositeDirCheck, t_y, t_x, hit, dir);
+					//	//	moveNumber++;
+					//	//}
 					//}
 				}
-				//else if (gameStage == 1) // 3-й этап игры - победа.
+				//else if (gameStage == ) // 3-й этап игры - победа.
 				//{
 
 				//}
 
-				if (gameStage == GAMEPLAY)
+				if (gameStage == GAMEPLAY || gameStage == PAUSE || gameStage == FINISH)
 				{
 					if (e.key.code == Mouse::Left && x == 23 && y == 0)
 					{
@@ -450,7 +439,7 @@ int main()
 						makeCleanBoard(urGameGraph);
 						makeCleanBoard(urShotsBoard);
 						changeShipsPlacement(urGameGraph);
-						--gameStage;
+						gameStage = START;
 						break;
 					}
 				}
@@ -520,8 +509,76 @@ int main()
 				dx = 0, dy = 0;
 			}
 
-			Sleep(100);
+			Sleep(10);
 		}
+
+		//---------------
+		// Логика ботов
+
+		if (gameStage == GAMEPLAY)
+		{
+			if (gameMode == 1 && moveNumber % 2 != 0 && compIntelligence == 0) // Компьютер -> Компьютер
+			{
+				randomShot(myShotsBoard, urGameGraph, x, y);
+				++moveNumber;
+				Sleep(1000);
+			}
+			else if (gameMode == 1 && moveNumber % 2 != 0 && compIntelligence == 1)
+			{
+				if (hit0 == false)
+				{
+					randomShot(myShotsBoard, urGameGraph, x, y);
+					t_x0 = x;
+					t_y0 = y;
+					playersMove(myShotsBoard, urGameGraph, y, x);
+
+					if (myShotsBoard[y][x] == 5)
+					{
+						hit0 = true;
+					}
+
+					++moveNumber;
+				}
+				else
+				{
+					smartBotMove(myShotsBoard, urGameGraph, opositeDirCheck0, t_y0, t_x0, hit0, dir0);
+					++moveNumber;
+				}
+				Sleep(1000);
+			}
+
+			if (moveNumber % 2 == 0) // Ход компьютера
+			{
+				if (compIntelligence == 0) // Ум компьютера
+				{
+					randomShot(urShotsBoard, myGameGraph, x, y);
+					++moveNumber;
+				}
+				else if (compIntelligence == 1)
+				{
+					if (hit == false)
+					{
+						randomShot(urShotsBoard, myGameGraph, x, y);
+						t_x = x;
+						t_y = y;
+						playersMove(urShotsBoard, myGameGraph, y, x);
+
+						if (urShotsBoard[y][x] == 5)
+						{
+							hit = true;
+						}
+
+						++moveNumber;
+					}
+					else
+					{
+						smartBotMove(urShotsBoard, myGameGraph, opositeDirCheck, t_y, t_x, hit, dir);
+						++moveNumber;
+					}
+				}
+			}
+		}
+		//---------------
 
 		app.display();
 
@@ -538,4 +595,3 @@ int main()
 
 	return 0;
 }
-

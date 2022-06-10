@@ -32,7 +32,7 @@ int main()
 
 	// Загрузка текстуры и создание спрайта
 	Texture t, texture_background;
-	t.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\BS_4.jpg");
+	t.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\BS7.jpg");
 	texture_background.loadFromFile("C:\\Users\\asusv\\Desktop\\ШАГ\\Основы C++\\Экзамен\\MyBattleship_v.2\\Media files\\bg5.jpg"); // Фон <-
 	Sprite s(t), s_background(texture_background);
 

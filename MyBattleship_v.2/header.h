@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include "windows.h"
 #include <iostream>
+#include <string>
+#include <fstream>
 
 #define BS 10
 

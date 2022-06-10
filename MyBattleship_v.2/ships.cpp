@@ -214,15 +214,11 @@ void changeShipsPlacement(int arrGraph[][BS])
 	}
 }
 
-bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int** shipCoords) // not completed
+bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int** shipCoords) 
 {
-	std::cout << "1\n";
-
 	srand(time(0)); // ?
 	int direction = 0;
 	char dirResult = '-';
-
-	std::cout << "2\n";
 
 	switch (direction)
 	{
@@ -342,8 +338,6 @@ bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int*
 		break;
 	}
 
-	std::cout << "3\n";
-
 	switch (dirResult)
 	{
 	case 'd':
@@ -352,14 +346,6 @@ bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int*
 		{
 			shipCoords[y][0] = i + y;
 			shipCoords[y][1] = j;
-
-			for (int g = 0; g < ships[counter]; g++) // t
-			{
-				std::cout << shipCoords[g][0] << "\t" << shipCoords[g][1] << std::endl;
-			} // t
-
-			std::cout << "SUCCESS@@@\n"; // t
-			//std::cout << shipCoords << std::endl;
 			arrGraph[i + y][j] = 9;
 		}
 		return true;
@@ -395,7 +381,6 @@ bool placeShips(int arrGraph[][BS], int rands[], int i, int j, int counter, int*
 
 void mannualShipPlacement(int arrGraph[][BS], int counter, int** shipCoords)
 {
-	std::cout << "Start\n";
 	bool shipNotExist = true;
 
 	while (shipNotExist)
@@ -420,17 +405,6 @@ void mannualShipPlacement(int arrGraph[][BS], int counter, int** shipCoords)
 			if (!shipNotExist) break;
 		}
 	}
-
-	std::cout << "PreNext\n";
-
-	std::cout << shipCoords << std::endl;
-
-	for (int g = 0; g < ships[counter]; g++) // t
-	{
-		std::cout << shipCoords[g][0] << "\t" << shipCoords[g][1] << std::endl;
-	} // t
-
-	std::cout << "Next\n";
 }
 
 bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx, int dy, bool shipIsVertical)
@@ -456,8 +430,6 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 		{1, 1}
 	};
 
-	std::cout << "Entered manualMoveCheck() function!\n";
-
 	if (dy == -1)
 	{
 		for (int y = 0; y < ships[counter]; y++)
@@ -466,7 +438,6 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 			int t_y = shipCoords[y][1] + dy;
 			if (t_x > 9 || t_x < 0 || t_y > 9 || t_y < 0)
 				return false;
-			std::cout << t_x << "\t" << t_y << std::endl;
 
 			if (shipIsVertical)
 			{
@@ -474,9 +445,6 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 				{
 					if (arrGraph[t_x + moveLeft[U][0]][t_y + moveLeft[U][1]] == 9)
 					{
-						std::cout << "return false;\n";
-						std::cout << t_y + moveLeft[U][0] << std::endl;
-						std::cout << t_x + moveLeft[U][1] << std::endl;
 						return false;
 					}
 				}
@@ -487,9 +455,6 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 				{
 					if (arrGraph[t_x + moveLeft[U][0]][t_y + moveLeft[U][1]] == 9)
 					{
-						std::cout << "return false;\n";
-						std::cout << t_y + moveLeft[U][0] << std::endl;
-						std::cout << t_x + moveLeft[U][1] << std::endl;
 						return false;
 					}
 				}
@@ -506,8 +471,6 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 			int t_y = shipCoords[y][1] + dy;
 			if (t_x > 9 || t_x < 0 || t_y > 9 || t_y < 0)
 				return false;
-			std::cout << t_x << "\t" << t_y << std::endl; // 
-
 
 			if (shipIsVertical)
 			{
@@ -540,7 +503,6 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 			int t_y = shipCoords[y][1] + dy;
 			if (t_x > 9 || t_x < 0 || t_y > 9 || t_y < 0)
 				return false;
-			std::cout << t_x << "\t" << t_y << std::endl;
 
 			if (shipIsVertical && y == 0)
 			{
@@ -573,7 +535,6 @@ bool mannualMoveCheck(int arrGraph[][BS], int counter, int** shipCoords, int dx,
 			int t_y = shipCoords[y][1] + dy;
 			if (t_x > 9 || t_x < 0 || t_y > 9 || t_y < 0)
 				return false;
-			std::cout << t_x << "\t" << t_y << std::endl;
 
 			if (shipIsVertical && y == ships[counter] - 1)
 			{

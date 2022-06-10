@@ -37,12 +37,12 @@ int main()
 	Sprite s(t), s_background(texture_background);
 
 	Font font;//шрифт 
-	font.loadFromFile("robosapien.ttf");//передаем нашему шрифту файл шрифта
-	Text text("", font, 17);//создаем объект текст. закидываем в объект текст строку, шрифт, размер шрифта(в пикселях);//сам объект текст (не строка)
+	font.loadFromFile("robosapien.ttf");
+	Text text("", font, 17);
 	Text helloTxt("", font, 31);
-	text.setColor(Color::Blue);//покрасили текст в красный. если убрать эту строку, то по умолчанию он белый
+	text.setColor(Color::Blue); // текст в красный. если убрать эту строку, то по умолчанию он белый
 	helloTxt.setColor(Color::Cyan);
-	text.setStyle(sf::Text::Bold);//жирный текст. по умолчанию он "худой":))
+	text.setStyle(sf::Text::Bold);
 	helloTxt.setStyle(sf::Text::Bold);
 
 	// P1 
@@ -143,8 +143,6 @@ int main()
 		Vector2i pos = Mouse::getPosition(app); // 
 		int x = pos.x / w;
 		int y = pos.y / w;
-
-		std::cout << x << "\t" << y << std::endl; // temp !
 
 		Event e;
 
@@ -265,24 +263,19 @@ int main()
 			}
 		}
 
-
-		//- - - - - - - -
-		// Проверка победы! // Not done yet
+		// Проверка победы! 
 		if (winCheck(urGameGraph) && gameStage == GAMEPLAY)
 		{
-			std::cout << "Player 1 Wins!\n";
 			++scoreP1;
 			high_score_save(scoreP1, 1);
 			gameStage = FINISH;
 		}
 		else if (winCheck(myGameGraph) && gameStage == GAMEPLAY)
 		{
-			std::cout << "Player 2 Wins!\n";
 			++scoreP2;
 			high_score_save(scoreP2, 2);
 			gameStage = FINISH;
 		}
-		//- - - - - - - -
 
 		while (app.pollEvent(e))
 		{
@@ -357,8 +350,8 @@ int main()
 						else if (gameMode == 1)
 						{
 							text.setString("\t   Gamemode:\n\t Player VS Bot");//задает строку тексту
-							text.setPosition(100, 0);//задаем позицию текста,
-							app.draw(text);//рисую этот текст
+							text.setPosition(100, 0);//задаем позицию текста
+							app.draw(text);//рисуем этот текст
 							textPause = true;
 							gameMode = 0;
 						}
@@ -371,16 +364,10 @@ int main()
 							shipsTotal = 0;
 						}
 
-						std::cout << "Hmmmm\n";
-
 						if (shipConfirmed == true)
 						{
-							//removeMatrix(shipCoords, shipsTotal);
-							std::cout << "Err1\n"; //
 							shipCoords = createMatrix(ships[shipsTotal], 2);
-							std::cout << "Err2\n"; // 
 							mannualShipPlacement(myGameGraph, shipsTotal, shipCoords);
-							std::cout << "Err3\n"; //
 							gameStage = MANUAL;
 							shipConfirmed = false;
 
@@ -390,8 +377,6 @@ int main()
 								break;
 							}
 						}
-
-						std::cout << "Rrrrrrr\n";
 
 						break;
 					}
@@ -407,7 +392,6 @@ int main()
 						&& myShotsBoard[y - 14][x - 1] != 0
 						&& moveNumber % 2 != 0)
 					{
-						std::cout << "FF?\n";
 						x -= 1;
 						y -= 14;
 						playersMove(myShotsBoard, urGameGraph, y, x);
@@ -432,46 +416,37 @@ int main()
 			}
 
 			int dx = 0, dy = 0;
-			if (e.type == Event::KeyPressed && gameStage == MANUAL && shipConfirmed == false /* && shipCoords != nullptr */)
+			if (e.type == Event::KeyPressed && gameStage == MANUAL && shipConfirmed == false)
 			{
 				if (e.key.code == Keyboard::Left)
 				{
-					std::cout << "L\n";
 					dy = -1;
 				}
 				else if (e.key.code == Keyboard::Right)
 				{
-					std::cout << "R\n";
 					dy = 1;
 				}
 				else if (e.key.code == Keyboard::Up)
 				{
-					std::cout << "U\n";
 					dx = -1;
 				}
 				else if (e.key.code == Keyboard::Down)
 				{
-					std::cout << "D\n";
 					dx = 1;
 				}
 				else if (e.key.code == Keyboard::Space) // Поворот корабля на 90 градусов и обратно при повторном нажатии
 				{
-					std::cout << "Space\n";
 					shipIsVertical = turnShip(myGameGraph, shipsTotal, shipCoords, shipIsVertical);
 				}
 				else if (e.key.code == Keyboard::Enter)
 				{
-					std::cout << "Enter1.0\n";
 					++shipsTotal;
 					shipConfirmed = true;
 					shipIsVertical = true;
-					std::cout << "Enter2.0\n";
 					if (shipsTotal == 9)
 						gameStage = GAMEPLAY;
 					break;
 				}
-
-				std::cout << "Turn 122:\n";
 
 				if (mannualMoveCheck(myGameGraph, shipsTotal, shipCoords, dx, dy, shipIsVertical))
 				{
@@ -498,9 +473,7 @@ int main()
 			Sleep(10);
 		}
 
-		//---------------
 		// Логика ботов
-
 		if (gameStage == GAMEPLAY)
 		{
 			if (gameMode == 1 && moveNumber % 2 != 0 && compIntelligence == 0) // Компьютер -> Компьютер
@@ -564,7 +537,6 @@ int main()
 				}
 			}
 		}
-		//---------------
 
 		app.display();
 
@@ -576,8 +548,6 @@ int main()
 
 		Sleep(100);
 	}
-
-	//removeMatrix(shipCoords);
 
 	return 0;
 }

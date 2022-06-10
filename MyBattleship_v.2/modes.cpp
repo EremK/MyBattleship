@@ -119,13 +119,12 @@ void smartBotMove(int urShotBoard[][BS], int myGameGraph[][BS], bool& opositeDir
 				if (urShotBoard[x][y] == 10)
 				{
 					playersMove(urShotBoard, myGameGraph, x, y);
-					if (urShotBoard[x][y] == 0)
-					{
-						dir = '-';
-						hit = false;
-						opositeDirCheck = false;
-						break;
-					}
+
+					dir = '-';
+					hit = false;
+					opositeDirCheck = false;
+					break;
+
 				}
 				else
 					continue;
@@ -149,13 +148,12 @@ void smartBotMove(int urShotBoard[][BS], int myGameGraph[][BS], bool& opositeDir
 				if (urShotBoard[x][y] == 10)
 				{
 					playersMove(urShotBoard, myGameGraph, x, y);
-					if (urShotBoard[x][y] == 0)
-					{
-						dir = '-';
-						hit = false;
-						opositeDirCheck = false;
-						break;
-					}
+
+					dir = '-';
+					hit = false;
+					opositeDirCheck = false;
+					break;
+
 				}
 				else
 					continue;
@@ -179,13 +177,12 @@ void smartBotMove(int urShotBoard[][BS], int myGameGraph[][BS], bool& opositeDir
 				if (urShotBoard[x][y] == 10)
 				{
 					playersMove(urShotBoard, myGameGraph, x, y);
-					if (urShotBoard[x][y] == 0)
-					{
-						dir = '-';
-						hit = false;
-						opositeDirCheck = false;
-						break;
-					}
+
+					dir = '-';
+					hit = false;
+					opositeDirCheck = false;
+					break;
+
 				}
 				else
 					continue;
@@ -290,7 +287,7 @@ void smartBotMove(int urShotBoard[][BS], int myGameGraph[][BS], bool& opositeDir
 					opositeDirCheck = false;
 					break;
 				}
-			} 
+			}
 			else
 			{
 				dir = '-';
